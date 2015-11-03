@@ -1,7 +1,6 @@
 package controllers
 
-import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.collection.JSONCollection
+import play.modules.reactivemongo._
 import scala.concurrent.Future
 import reactivemongo.api.Cursor
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -9,6 +8,9 @@ import org.slf4j.{LoggerFactory, Logger}
 import javax.inject.Singleton
 import play.api.mvc._
 import play.api.libs.json._
+import javax.inject.Inject
+import play.modules.reactivemongo.json._, collection.JSONCollection
+import reactivemongo.api.ReadPreference.nearest
 
 /**
  * The Users controllers encapsulates the Rest endpoints and the interaction with the MongoDB, via ReactiveMongo
@@ -16,7 +18,10 @@ import play.api.libs.json._
  * @see https://github.com/ReactiveMongo/Play-ReactiveMongo
  */
 @Singleton
-class Users extends Controller with MongoController {
+class Users @Inject() (val reactiveMongoApi: ReactiveMongoApi)
+    extends Controller
+    with MongoController
+    with ReactiveMongoComponents {
 
   private final val logger: Logger = LoggerFactory.getLogger(classOf[Users])
 
@@ -78,7 +83,7 @@ class Users extends Controller with MongoController {
       // sort them by creation date
       sort(Json.obj("created" -> -1)).
       // perform the query and get a cursor of JsObject
-      cursor[User]
+      cursor[User](nearest)
 
     // gather all the JsObjects in a list
     val futureUsersList: Future[List[User]] = cursor.collect[List]()
@@ -89,8 +94,7 @@ class Users extends Controller with MongoController {
     }
     // everything's ok! Let's reply with the array
     futurePersonsJsonArray.map {
-      users =>
-        Ok(users(0))
+      users => Ok(users(0).get)
     }
   }
 
