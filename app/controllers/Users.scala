@@ -9,8 +9,9 @@ import javax.inject.Singleton
 import play.api.mvc._
 import play.api.libs.json._
 import javax.inject.Inject
-import play.modules.reactivemongo.json._, collection.JSONCollection
+import play.modules.reactivemongo.json._
 import reactivemongo.api.ReadPreference.nearest
+import play.modules.reactivemongo.json.collection.JSONCollection
 
 /**
  * The Users controllers encapsulates the Rest endpoints and the interaction with the MongoDB, via ReactiveMongo

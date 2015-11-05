@@ -20,6 +20,7 @@ UglifyKeys.uglifyOps := { js =>
 
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "4.0",
@@ -28,4 +29,10 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "3.3.4",
   "org.webjars" % "angularjs" % "1.3.15",
   "org.webjars" % "angular-ui-bootstrap" % "0.13.0",
-  "org.mockito" % "mockito-core" % "1.10.19" % "test")
+  "org.specs2"  %% "specs2-core" % "3.6.5" % "test",
+  "org.specs2"  %% "specs2-mock" % "3.6.5" % "test",
+  "org.specs2"  %% "specs2-junit" % "3.6.5" % "test"
+)
+
+
+fork in run := true
